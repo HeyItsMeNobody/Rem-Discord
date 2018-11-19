@@ -1,0 +1,19 @@
+{
+  "name": "remdiscord",
+  "version": "1.0.0",
+  "description": "Rem Discord Bot",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeyItsMeNobody/RemDiscord.git"
+  },
+  "author": "heyitsmenobody",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HeyItsMeNobody/RemDiscord/issues"
+  },
+  "homepage": "https://github.com/HeyItsMeNobody/RemDiscord#readme",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
