@@ -26,6 +26,15 @@ fs.readdir("./commands/", (err, files) => {
 
 client.on('message', async message => {
     if (message.author.bot) return;
+
+    if (config.discord.repeat == "yes") {
+        if (message.author.id == config.discord.ownerid) {
+            if (message.deletable) {
+                message.channel.send(message.content);
+                message.delete();
+            }
+        }
+    }
     
     let prefix = "r!";
     var messageStr = message.toString();
