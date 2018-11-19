@@ -14,6 +14,8 @@
   },
   "homepage": "https://github.com/HeyItsMeNobody/RemDiscord#readme",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "moment": "^2.22.2",
+    "vm2": "^3.6.4"
   }
 }

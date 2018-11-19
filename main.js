@@ -20,13 +20,13 @@ fs.readdir("./commands/", (err, files) => {
     jsfile.forEach((f, i) => {
         let props = require(`./commands/${f}`);
         console.log(`Loaded ${f}`);
-        commands.set(props);
+        commands.set(props.help.name, props);
     });
 });
 
 client.on('message', async message => {
     if (message.author.bot) return;
-
+    
     let prefix = "r!";
     var messageStr = message.toString();
     if(!(messageStr.startsWith(prefix))) return;
@@ -36,7 +36,7 @@ client.on('message', async message => {
     let args = messageArray.slice(1);
 
     let commandfile = commands.get(cmd.slice(prefix.length));
-    if (commandfile) commandfile.run(client, message, messageArray, cmd, args);
+    if (commandfile) commandfile.run(client, message, messageArray, cmd, args, config);
 });
 
 client.login(config.discord.token);
