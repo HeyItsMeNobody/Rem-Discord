@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const moment = require('moment');
 var consolelog;
 module.exports.run = async (client, message, messageArray, cmd, args, config) => {
+    var argsjoined = args.join(" ");
     const {VM} = require('vm2');
     const vm = new VM({
         sandbox: {
@@ -14,7 +15,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
     embed.setTitle('Sandbox');
     embed.setDescription('Everything your command outputted uwu');
     try {
-        if (vm.run(args) == undefined && consolelog == "") {
+        if (vm.run(argsjoined) == undefined && consolelog == "") {
             // message.channel.send('Undefined');
             embed.addField('Output:', '```Undefined```')
         } else {
