@@ -12,6 +12,8 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                     return message.channel.send(`You didn't give me anything to send to <#${args[1]}>!`);
                 } else {
                     message.guild.channels.get(`${args[1]}`).send(sendMessage);
+                    message.delete().catch(O_o=>{});
+                    return;
                 }
             } catch (err) {
                 return message.channel.send(`Something went wrong, Did you double check the channel id?`);
