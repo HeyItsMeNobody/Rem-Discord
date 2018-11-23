@@ -20,7 +20,11 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                         embed.addField(`Level:`, user.level, true);
                         embed.addField(`pp:`, user.pp.raw, true);
                         embed.addField(`Rank:`, `#${user.pp.rank}`, true);
-                        embed.addField(`Country Rank:`, `#${user.pp.countryRank}`, true)
+                        embed.addField(`Country Rank:`, `#${user.pp.countryRank}`, true);
+                        embed.addField(`Plays:`, `${user.counts.plays}`, true);
+                        embed.addField(`Profile link:`, `[Here](https://osu.ppy.sh/users/${user.id})`);
+                        embed.setThumbnail('http://nobody.life/images/osuicon.png');
+                        embed.setColor('F06EA9');
                         message.channel.send(embed);
                     } else return message.channel.send(`Didn't find a user with the name ${args[1]}`)
                 });
