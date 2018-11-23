@@ -10,19 +10,16 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                 osuApi.getUser({u: args[1]}).then(user => {
                     if (user.length == undefined) {
                         const embed = new Discord.RichEmbed()
-                        embed.setTitle(`Osu! Userinfo`);
-                        embed.addField(`Username:`, user.name, true);
-                        embed.addField(`Id:`, user.id, true);
-                        if (user.country) {
-                            embed.addField(`Country:`, user.country, true);
-                        }
-                        embed.addField(`Accuracy:`, user.accuracy, true);
-                        embed.addField(`Level:`, user.level, true);
-                        embed.addField(`pp:`, user.pp.raw, true);
-                        embed.addField(`Rank:`, `#${user.pp.rank}`, true);
-                        embed.addField(`Country Rank:`, `#${user.pp.countryRank}`, true);
-                        embed.addField(`Plays:`, `${user.counts.plays}`, true);
-                        embed.addField(`Profile link:`, `[Here](https://osu.ppy.sh/users/${user.id})`);
+                        embed.setTitle(`**Osu! profile for ${user.name}**`);
+                        embed.setDescription(`300s: ${user.counts['300']} | 100s: ${user.counts['100']} | 50s: ${user.counts['50']}\nSS: ${user.counts.SS} | S: ${user.counts.S} | A: ${user.counts.A}`);
+                        if (user.country) embed.addField(`User`, `${user.name} (${user.country})`, true);
+                        else embed.addField(`User`, `${user.name}`, true);
+                        embed.addField(`Play Count | Level`, `${user.counts.plays} | ${parseFloat(user.level).toFixed(2)}`, true);
+                        embed.addField(`Ranked | Total scores`, `${user.scores.ranked} | ${user.scores.total}`, true);
+                        if (user.country) embed.addField(`Rank | Country rank`, `${user.pp.rank} | ${user.pp.countryRank}`, true);
+                        else embed.addField(`Rank`, `${user.pp.rank}`, true);
+                        embed.addField(`PP | Accuracy`, `${parseFloat(user.pp.raw).toFixed()} | ${parseFloat(user.accuracy).toFixed(2)}%`, true);
+                        embed.addField(`Profile url`, `[Here](https://osu.ppy.sh/users/${user.id})`, true);
                         embed.setThumbnail('http://nobody.life/images/osuicon.png');
                         embed.setColor('F06EA9');
                         message.channel.send(embed);
