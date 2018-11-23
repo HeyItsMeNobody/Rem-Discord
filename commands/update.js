@@ -8,7 +8,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
             embed.setColor('#BA55D3');
             exec('git pull origin master', (error, stdout, stderr) => {
                 if (error) return embed.setDescription('```' + error + '```');
-                else embed.setDescription('```' + stdout + '```');
+                else embed.setDescription('```Stdout: ' + stdout + ' stderr: ' + stderr + '```');
             });
             message.channel.send(embed);
         } else {
