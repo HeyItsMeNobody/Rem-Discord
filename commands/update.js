@@ -7,10 +7,10 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
             embed.setTitle('Output');
             embed.setColor('#BA55D3');
             exec('git pull origin master', (error, stdout, stderr) => {
-                if (error) return embed.setDescription('```' + error.name + '```'); console.log(error);
-                else embed.setDescription('```Stdout: ' + stdout + ' stderr: ' + stderr + '```'); console.log('Stdout: ' + stdout + ' stderr: ' + stderr)
+                if (error) {embed.setDescription('```' + error.name + '```'); console.log(error);}
+                else embed.setDescription('```Stdout: ' + stdout + ' stderr: ' + stderr + '```'); console.log('Stdout: ' + stdout + ' stderr: ' + stderr);
+                message.channel.send(embed);
             });
-            message.channel.send(embed);
         } else {
             message.channel.send('The update command can only be run on the actual bot');
         }
