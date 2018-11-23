@@ -6,6 +6,7 @@ const config = require('./config.json');
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
+    client.user.setActivity(`${client.guilds.size} guilds | r!help`, { type: 'WATCHING' })
 });
 
 fs.readdir("./commands/", (err, files) => {
