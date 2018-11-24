@@ -8,6 +8,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
             embed.setColor('#BA55D3');
             exec('sudo git pull origin master', (error, stdout, stderr) => {
                 if (error) {embed.setDescription('```' + error + '```'); console.log(error);}
+                else if (stdout == "Already up-to-date.") embed.setDescription('Bot already up to date!');
                 else embed.setDescription('```Stdout: ' + stdout + ' stderr: ' + stderr + '```'); console.log('Stdout: ' + stdout + ' stderr: ' + stderr);
                 message.channel.send(embed);
             });
