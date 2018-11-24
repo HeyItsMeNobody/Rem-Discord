@@ -50,4 +50,7 @@ client.on('message', async message => {
     if (commandfile) commandfile.run(client, message, messageArray, cmd, args, config);
 });
 
+// Adding a generic error handler by suggestions https://imgur.com/ASGvS4R
+client.on('error', console.error);
+
 client.login(config.discord.token);
