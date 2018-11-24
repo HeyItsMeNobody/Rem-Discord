@@ -50,6 +50,11 @@ client.on('message', async message => {
     if (commandfile) commandfile.run(client, message, messageArray, cmd, args, config);
 });
 
+client.on('guildCreate', guild => {
+    client.user.setStatus('dnd');
+    client.user.setActivity(`${client.guilds.size} guilds | r!help`, { type: 'WATCHING' });
+});
+
 // Adding a generic error handler by suggestions https://imgur.com/ASGvS4R
 client.on('error', console.error);
 
