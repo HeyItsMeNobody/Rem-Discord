@@ -21,6 +21,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                 }
             });
         }
+        conn.release();
     });
 }
 

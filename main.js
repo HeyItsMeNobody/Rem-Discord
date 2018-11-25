@@ -59,6 +59,7 @@ client.on('message', async message => {
                 conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
             }
         });
+        conn.release();
     });
     
     let prefix = "r!";
