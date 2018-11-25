@@ -3,6 +3,7 @@ const client = new Discord.Client();
 const commands = new Discord.Collection();
 const fs = require('fs');
 const config = require('./config.json');
+const getConnection = require('./mysqlPool.js');
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
@@ -26,9 +27,14 @@ fs.readdir("./commands/", (err, files) => {
     });
 });
 
+function randomIntBetween() {
+    let min = 5;
+    let max = 15;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 client.on('message', async message => {
     if (message.author.bot) return;
-
     if (config.discord.repeat == "yes") {
         if (message.author.id == config.discord.ownerid) {
             if (message.deletable) {
@@ -37,6 +43,23 @@ client.on('message', async message => {
             }
         }
     }
+    // Leveling?
+    getConnection(function(err, conn) {
+        conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
+            if (error) throw error;
+            if (result.length < 1) {
+                conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0')`, function(error, result) {
+                    if (error) throw error;
+                });
+            } else {
+                var xp = Number(result[0].xp);
+                var newXP;
+                newXP = randomIntBetween();
+                newXP = xp += newXP
+                conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
+            }
+        });
+    });
     
     let prefix = "r!";
     var messageStr = message.toString();
