@@ -6,9 +6,9 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
             conn.query(`SELECT * FROM global_stats WHERE id = '${message.mentions.members.first().id}'`, function(error, result) {
                 if (error) throw error;
                 if (result.length < 1) {
-                    message.channel.send(`${message.mentions.members.first().displayName} doesn't have xp yet!`);
+                    message.channel.send(`${message.mentions.members.first().displayName} doesn't have any xp yet!`);
                 } else {
-                    message.channel.send(`${message.mentions.members.first().displayName} has ${result[0].xp} xp`);
+                    message.channel.send(`${message.mentions.members.first().displayName} is level ${result[0].level} (${result[0].xp}xp)`);
                 }
             });
         } else {
@@ -17,7 +17,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                 if (result.length < 1) {
                     message.channel.send('Send another message to gain some xp!');
                 } else {
-                    message.channel.send(`You have ${result[0].xp} xp`);
+                    message.channel.send(`You are level ${result[0].level} (${result[0].xp}xp)`);
                 }
             });
         }
@@ -26,5 +26,5 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
 }
 
 module.exports.help = {
-    name: "xp"
+    name: "level"
 }
