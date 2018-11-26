@@ -4,6 +4,7 @@ const commands = new Discord.Collection();
 const fs = require('fs');
 const config = require('./config.json');
 const getConnection = require('./mysqlPool.js');
+const talkedRecently = new Set();
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
@@ -44,23 +45,34 @@ client.on('message', async message => {
         }
     }
     // Leveling?
-    getConnection(function(err, conn) {
-        conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
-            if (error) throw error;
-            if (result.length < 1) {
-                conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0')`, function(error, result) {
-                    if (error) throw error;
-                });
-            } else {
-                var xp = Number(result[0].xp);
-                var newXP;
-                newXP = randomIntBetween();
-                newXP = xp += newXP
-                conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
-            }
+    if (!talkedRecently.has(message.author.id)) {
+        getConnection(function(err, conn) {
+            conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
+                if (error) throw error;
+                if (result.length < 1) {
+                    conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0', '0')`, function(error, result) {
+                        if (error) throw error;
+                    });
+                } else {
+                    var xp = Number(result[0].xp);
+                    var newXP;
+                    newXP = randomIntBetween();
+                    newXP = xp += newXP
+                    const curLevel = Math.floor(0.1 * Math.sqrt(result[0].xp));
+                    if (result[0].level < curLevel) {
+                        message.reply(`You've leveled up to level **${curLevel}**`);
+                        conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
+                    }
+                    conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
+                }
+            });
+            conn.release();
         });
-        conn.release();
-    });
+        talkedRecently.add(message.author.id);
+        setTimeout(() => {
+            talkedRecently.delete(message.author.id);
+        }, 10000);
+    }
     
     let prefix = "r!";
     var messageStr = message.toString();
