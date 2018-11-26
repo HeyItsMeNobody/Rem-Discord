@@ -36,6 +36,9 @@ function randomIntBetween() {
 
 client.on('message', async message => {
     if (message.author.bot) return;
+    if (message.guild.id == '264445053596991498') return;
+    if (message.guild.id == '450100127256936458') return;
+
     if (config.discord.repeat == "yes") {
         if (message.author.id == config.discord.ownerid) {
             if (message.deletable) {
