@@ -63,7 +63,14 @@ client.on('message', async message => {
                     newXP = xp += newXP
                     const curLevel = Math.floor(0.1 * Math.sqrt(result[0].xp));
                     if (result[0].level < curLevel) {
-                        message.reply(`You've leveled up to level **${curLevel}**`);
+                        conn.query(`SELECT * FROM guild_configs WHERE id = '${message.guild.id}'`, function(error, result) {
+                            if (error) throw error;
+                            if (result.length < 1) {
+                                message.reply(`You've leveled up to level **${curLevel}**`);
+                            } else if (result[0].lvlmessage == "yes") {
+                                message.reply(`You've leveled up to level **${curLevel}**`);
+                            } else if (result[0].lvlmessage == "no") {}
+                        });
                         conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
                     }
                     conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
