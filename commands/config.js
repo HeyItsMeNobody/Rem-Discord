@@ -34,6 +34,11 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                     if (message.content == '1') {
                         const lvlmessageEmbed = new Discord.RichEmbed();
                         lvlmessageEmbed.setTitle('Editing: Level message');
+                        if (result[0].lvlmessage == "yes") {
+                            lvlmessageEmbed.setDescription('Turn level up message off in this guild?\n[1] Yes\n[2] No');
+                        } else {
+                            lvlmessageEmbed.setDescription('Turn level up message on in this guild?\n[1] Yes\n[2] No');
+                        }
                         lvlmessageEmbed.setDescription('Should people receive level up messages in this guild?\nDefault: Yes\n[1] Yes\n[2] No');
                         lvlmessageEmbed.setFooter(`Type 'exit' to leave the menu`);
                         lvlmessageEmbed.setColor('F06EA9');
@@ -41,18 +46,34 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                         const lvlmessageCollector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 60000 });
                         lvlmessageCollector.on('collect', message => {
                             if (message.content == "1") {
-                                conn.query(`UPDATE guild_configs SET lvlmessage = 'yes' WHERE id = ${result[0].id}`, function(error, result){
-                                    if (error) throw error; else {
-                                        message.channel.send(`I will now send level up messages again uwu`);
-                                    }
-                                });
+                                if (result[0].lvlmessage == "yes") {
+                                    conn.query(`UPDATE guild_configs SET lvlmessage = 'no' WHERE id = ${result[0].id}`, function(error, result){
+                                        if (error) throw error; else {
+                                            message.channel.send(`I will no longer send level up messages uwu`);
+                                        }
+                                    });
+                                } else {
+                                    conn.query(`UPDATE guild_configs SET lvlmessage = 'yes' WHERE id = ${result[0].id}`, function(error, result){
+                                        if (error) throw error; else {
+                                            message.channel.send(`I will now send level up messages again uwu`);
+                                        }
+                                    });
+                                }
                                 lvlmessageCollector.stop();
                             } else if (message.content == "2") {
-                                conn.query(`UPDATE guild_configs SET lvlmessage = 'no' WHERE id = ${result[0].id}`, function(error, result){
-                                    if (error) throw error; else {
-                                        message.channel.send(`I will no longer send level up messages uwu`);
-                                    }
-                                });
+                                if (result[0].lvlmessage == "yes") {
+                                    conn.query(`UPDATE guild_configs SET lvlmessage = 'yes' WHERE id = ${result[0].id}`, function(error, result){
+                                        if (error) throw error; else {
+                                            message.channel.send(`I will now send level up messages again uwu`);
+                                        }
+                                    });
+                                } else {
+                                    conn.query(`UPDATE guild_configs SET lvlmessage = 'no' WHERE id = ${result[0].id}`, function(error, result){
+                                        if (error) throw error; else {
+                                            message.channel.send(`I will no longer send level up messages uwu`);
+                                        }
+                                    });
+                                }
                                 lvlmessageCollector.stop();
                             } else if (message.content == "exit") return message.channel.send('Exited the menu!'); lvlmessageCollector.stop();
                         });
