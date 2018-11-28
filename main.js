@@ -106,7 +106,7 @@ client.on('message', async message => {
                 talkedRecentlyGuild.add(message.author.id);
                 setTimeout(() => {
                     talkedRecentlyGuild.delete(message.author.id);
-                }, 60000);
+                }, 30000);
             }
             conn.release();
         });
