@@ -66,7 +66,7 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                     if (GlobalLevel) {
                         Embed.setTitle(Title)
                         Embed.addField(`Level:`, Level, true);
-                        Embed.addField(`Global level`, GlobalLevel, true);
+                        Embed.addField(`Global level:`, GlobalLevel, true);
                         message.channel.send(Embed)
                     } else {setTimeout (waitForStuff, 250)}
                 } else {setTimeout (waitForStuff, 250)}
