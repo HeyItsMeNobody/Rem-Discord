@@ -94,7 +94,7 @@ client.on('message', async message => {
                     var newXP;
                     newXP = randomIntBetween();
                     newXP = xp += newXP
-                    const curLevel = Math.floor(0.1 * Math.sqrt(result[0].xp));
+                    const curLevel = Math.floor(0.05 * Math.sqrt(result[0].xp));
                     if (result[0].level < curLevel) {
                         conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
                     }
