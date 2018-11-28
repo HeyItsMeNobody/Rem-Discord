@@ -50,10 +50,13 @@ client.on('message', async message => {
     // Leveling?
     if (!talkedRecently.has(message.author.id)) {
         getConnection(function(err, conn) {
-            conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
+            // Guild leveling
+            conn.query(`SELECT * FROM guild_stats WHERE guildid = '${message.guild.id}' AND id = '${message.author.id}'`, function(error, result) {
                 if (error) throw error;
+                var guildname = message.guild.name.replace("'", "`");
+                var username = message.author.tag.replace("'", "`");
                 if (result.length < 1) {
-                    conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0', '0')`, function(error, result) {
+                    conn.query(`INSERT INTO guild_stats VALUES ('${guildname}', '${message.guild.id}', '${username}', '${message.author.id}', '0', '0')`, function(error, result) {
                         if (error) throw error;
                     });
                 } else {
@@ -71,6 +74,28 @@ client.on('message', async message => {
                                 message.reply(`You've leveled up to level **${curLevel}**`);
                             } else if (result[0].lvlmessage == "no") {}
                         });
+                        conn.query(`UPDATE guild_stats SET level = '${curLevel}' WHERE id = '${message.author.id}' AND guildid = '${message.guild.id}'`);
+                    }
+                    // This is like this because it didn't like multiple ones.
+                    conn.query(`UPDATE guild_stats SET xp = '${newXP}' WHERE id = '${message.author.id}' AND guildid = '${message.guild.id}'`);
+                    conn.query(`UPDATE guild_stats SET guildname = '${guildname}' WHERE id = '${message.author.id}' AND guildid = '${message.guild.id}'`);
+                    conn.query(`UPDATE guild_stats SET name = '${username}' WHERE id = '${message.author.id}' AND guildid = '${message.guild.id}'`);
+                }
+            });
+            // Global leveling
+            conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
+                if (error) throw error;
+                if (result.length < 1) {
+                    conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0', '0')`, function(error, result) {
+                        if (error) throw error;
+                    });
+                } else {
+                    var xp = Number(result[0].xp);
+                    var newXP;
+                    newXP = randomIntBetween();
+                    newXP = xp += newXP
+                    const curLevel = Math.floor(0.1 * Math.sqrt(result[0].xp));
+                    if (result[0].level < curLevel) {
                         conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
                     }
                     conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
