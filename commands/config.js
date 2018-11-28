@@ -39,7 +39,6 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
                         } else {
                             lvlmessageEmbed.setDescription('Turn level up message on in this guild?\n[1] Yes\n[2] No');
                         }
-                        lvlmessageEmbed.setDescription('Should people receive level up messages in this guild?\nDefault: Yes\n[1] Yes\n[2] No');
                         lvlmessageEmbed.setFooter(`Type 'exit' to leave the menu`);
                         lvlmessageEmbed.setColor('F06EA9');
                         message.channel.send(lvlmessageEmbed);
