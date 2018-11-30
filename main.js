@@ -84,30 +84,24 @@ client.on('message', async message => {
                 }
             });
             // Global leveling
-            if (!talkedRecentlyGuild.has(message.author.id)) {
-                conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
-                    if (error) throw error;
-                    if (result.length < 1) {
-                        conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0', '0')`, function(error, result) {
-                            if (error) throw error;
-                        });
-                    } else {
-                        var xp = Number(result[0].xp);
-                        var newXP;
-                        newXP = randomIntBetween();
-                        newXP = xp += newXP
-                        const curLevel = Math.floor(0.05 * Math.sqrt(result[0].xp));
-                        if (result[0].level < curLevel) {
-                            conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
-                        }
-                        conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
+            conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
+                if (error) throw error;
+                if (result.length < 1) {
+                    conn.query(`INSERT INTO global_stats VALUES ('${message.author.id}', '0', '0')`, function(error, result) {
+                        if (error) throw error;
+                    });
+                } else {
+                    var xp = Number(result[0].xp);
+                    var newXP;
+                    newXP = randomIntBetween();
+                    newXP = xp += newXP
+                    const curLevel = Math.floor(0.08 * Math.sqrt(result[0].xp));
+                    if (result[0].level < curLevel) {
+                        conn.query(`UPDATE global_stats SET level = ${curLevel} WHERE id = ${message.author.id}`);
                     }
-                });
-                talkedRecentlyGuild.add(message.author.id);
-                setTimeout(() => {
-                    talkedRecentlyGuild.delete(message.author.id);
-                }, 30000);
-            }
+                    conn.query(`UPDATE global_stats SET xp = ${newXP} WHERE id = ${message.author.id}`);
+                }
+            });
             conn.release();
         });
         talkedRecently.add(message.author.id);
