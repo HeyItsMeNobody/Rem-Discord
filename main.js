@@ -5,7 +5,6 @@ const fs = require('fs');
 const config = require('./config.json');
 const getConnection = require('./mysqlPool.js');
 const talkedRecently = new Set();
-const talkedRecentlyGuild = new Set();
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
