@@ -38,14 +38,12 @@ module.exports.run = async (client, message, messageArray, cmd, args, config) =>
             Title = `${message.author.tag} their profile`;
             conn.query(`SELECT * FROM guild_stats WHERE id = '${message.author.id}' AND guildid = '${message.guild.id}'`, function(error, result) {
                 if (error) throw error;
-                console.log(result[0]);
                 if (result.length < 1) {
                     //Embed.addField(`Level:`, `N/A`, true);
                     Level = 'N/A';
                 } else {
                     //Embed.addField(`Level:`, `${result[0].level} (${result[0].xp}xp)`, true);
                     Level = `${result[0].level} (${result[0].xp}xp)`;
-                    console.log(result[0])
                 }
             });
             conn.query(`SELECT * FROM global_stats WHERE id = '${message.author.id}'`, function(error, result) {
