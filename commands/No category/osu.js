@@ -1,4 +1,4 @@
-const config = require('../config.json');
+const config = require('../../config.json');
 const osu = require('node-osu');
 const Discord = require('discord.js');
 var osuApi = new osu.Api(config.osu.apiKey, {notFoundAsError: false});

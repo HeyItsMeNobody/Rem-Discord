@@ -1,4 +1,4 @@
-var getConnection = require('../mysqlPool.js');
+var getConnection = require('../../mysqlPool.js');
 const Discord = require('discord.js');
 
 module.exports.run = async (client, message, messageArray, cmd, args, config) => {

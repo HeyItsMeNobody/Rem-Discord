@@ -5,6 +5,7 @@ const fs = require('fs');
 const config = require('./config.json');
 const getConnection = require('./mysqlPool.js');
 const talkedRecently = new Set();
+const path = require('path');
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
@@ -12,19 +13,26 @@ client.on('ready', () => {
     client.user.setActivity(`${client.guilds.size} guilds | r!help`, { type: 'WATCHING' });
 });
 
-fs.readdir("./commands/", (err, files) => {
-    if(err) console.log(err)
+const isDirectory = source => fs.lstatSync(source).isDirectory()
+const getDirectories = source =>
+  fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory)
 
-    let jsfile = files.filter(f => f.split(".").pop() === "js")
-    if(jsfile.length <= 0){
-        console.log("Couldn't find commands?..");
-        return;
-    }
+getDirectories('./commands').forEach(folder => {
+    fs.readdir(folder, (err, files) => {
+        if(err) console.log(err)
 
-    jsfile.forEach((f, i) => {
-        let props = require(`./commands/${f}`);
-        console.log(`Loaded ${f}`);
-        commands.set(props.help.name, props);
+        let jsfile = files.filter(f => f.split(".").pop() === "js");
+    
+        if(jsfile.length <= 0){
+            console.log("Couldn't find commands in " + folder);
+            return;
+        }
+    
+        jsfile.forEach((f, i) => {
+            let props = require(`./${folder}/${f}`);
+            console.log(`Loaded ${f}`);
+            commands.set(props.help.name, props);
+        });
     });
 });
 
