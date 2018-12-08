@@ -139,6 +139,9 @@ client.on('guildDelete', guild => {
 });
 
 // Adding a generic error handler by suggestions https://imgur.com/ASGvS4R
-client.on('error', console.error);
+client.on('error', error => {
+    console.error(error);
+    process.exit(0);
+});
 
 client.login(config.discord.token);
