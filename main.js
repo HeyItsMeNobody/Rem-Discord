@@ -6,6 +6,8 @@ const config = require('./config.json');
 const getConnection = require('./mysqlPool.js');
 const talkedRecently = new Set();
 const path = require('path');
+const { google } = require('googleapis');
+const uuid = require('uuid');
 
 client.on('ready', () => {
     console.log(`Loaded and logged in as ${client.user.tag}`);
@@ -44,17 +46,38 @@ function randomIntBetween() {
 
 client.on('message', async message => {
     if (message.author.bot) return;
-    if (message.guild.id == '264445053596991498') return;
-    if (message.guild.id == '450100127256936458') return;
 
-    if (config.discord.repeat == "yes") {
-        if (message.author.id == config.discord.ownerid) {
-            if (message.deletable) {
-                message.channel.send(message.content);
-                message.delete();
-            }
-        }
+    if (message.channel.type == "dm") {
+        const gclient = await google.auth.getClient({
+            keyFile: path.resolve('./Rem-Googlecloud.json'),
+            scopes: 'https://www.googleapis.com/auth/cloud-platform'
+        });
+
+        const dialogflow = google.dialogflow({
+            version: 'v2beta1',
+            auth: gclient
+        });
+
+        const result = await dialogflow.projects.agent.sessions.detectIntent({
+            session: `projects/${config.dialogflow.pId}/agent/sessions/${uuid.v4()}`,
+            requestBody: {
+                queryInput: {
+                    text: {
+                        text: message.content,
+                        languageCode: 'en-US',
+                    },
+                },
+            },
+        });
+
+        message.channel.send(result.data.queryResult.fulfillmentText);
+
+        return;
     }
+
+    if (message.guild) {
+        if (message.guild.id == '264445053596991498') return;
+        if (message.guild.id == '450100127256936458') return;
     // Leveling?
     if (!talkedRecently.has(message.author.id)) {
         getConnection(function(err, conn) {
@@ -115,6 +138,16 @@ client.on('message', async message => {
         setTimeout(() => {
             talkedRecently.delete(message.author.id);
         }, 10000);
+    }
+    }
+
+    if (config.discord.repeat == "yes") {
+        if (message.author.id == config.discord.ownerid) {
+            if (message.deletable) {
+                message.channel.send(message.content);
+                message.delete();
+            }
+        }
     }
     
     let prefix = "r!";
