@@ -133,7 +133,7 @@ client.on('message', async message => {
     let cmd = messageArray[0];
     let args = messageArray.slice(1);
 
-    if (message.content.startsWith('<@515618351364440094>' || '<@508670321835114506>')) {
+    if (message.content.startsWith(`<@${client.user.id}>`)) {
         dialogflow.DetectIntent(message, args.join(" "));
         return;
     }
