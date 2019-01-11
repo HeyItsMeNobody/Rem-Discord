@@ -4,7 +4,8 @@ const uuid = require('uuid');
 const config = require('../config.json');
 
 module.exports = {
-    DetectIntent: async function(message) {
+    DetectIntent: async function(message, text) {
+        text = text || message.content
         const gclient = await google.auth.getClient({
             keyFile: path.resolve('./Rem-Googlecloud.json'),
             scopes: 'https://www.googleapis.com/auth/cloud-platform'
@@ -19,7 +20,7 @@ module.exports = {
             requestBody: {
                 queryInput: {
                     text: {
-                        text: message.content,
+                        text: text,
                         languageCode: 'en-US',
                     },
                 },

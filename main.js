@@ -47,7 +47,7 @@ client.on('message', async message => {
     if (message.author.bot) return;
 
     if (message.channel.type == "dm") {
-        dialogflow.DetectIntent(message);
+        dialogflow.DetectIntent(message, message.content);
         return;
     }
 
@@ -128,12 +128,17 @@ client.on('message', async message => {
     
     let prefix = "r!";
     var messageStr = message.toString();
-    if(!(messageStr.startsWith(prefix))) return;
 
     let messageArray = message.content.split(" ");
     let cmd = messageArray[0];
     let args = messageArray.slice(1);
 
+    if (message.content.startsWith('<@515618351364440094>' || '<@508670321835114506>')) {
+        dialogflow.DetectIntent(message, args.join(" "));
+        return;
+    }
+
+    if(!(messageStr.startsWith(prefix))) return;
     let commandfile = commands.get(cmd.slice(prefix.length));
     if (commandfile) commandfile.run(client, message, messageArray, cmd, args, config);
 });
